@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: cdc-ms-analise-proposta-offline
+  profiles:
+    active: local
+
+server:
+  port: ${SERVER_PORT}
+
+---
+spring:
+  profiles: local
+  webflux:
+    base-path: 
+  data:
+    mongodb:
+      primary:
+        uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_URI}/${MONGO_DATABASE}${MONGO_REPLICASET}
+        database: ${MONGO_DATABASE}
+      tracking:
+        uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_URI}/${MONGO_DATABASE}${MONGO_REPLICASET}
+        database: ${MONGO_DATABASE}
+  kafka:
+    producer:
+      client-id: cdc-ms-analise-proposta-offline
+      bootstrap-servers: kfkh-cdclab-01.dc.nova:9093
+      retries: 1
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+    listener:
+      ack-mode: manual
+
+analise-proposta:
+  kafka:
+    producer:
+      topic: analise-proposta-offline
+  services:
+    analise-proposta-offline-cdclab: http://creditopiloto.viavarejo.com.br/cdclab/api/rest/analise-proposta

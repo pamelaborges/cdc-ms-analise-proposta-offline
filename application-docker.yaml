@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: cdc-ms-analise-proposta-online
+  profiles:
+    active: local
+
+server:
+  port: ${SERVER_PORT}
+
+---
+spring:
+  profiles: local
+  webflux:
+    base-path: 
+  data:
+    mongodb:
+      primary:
+        uri: ${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_URI}/${MONGO_DATABASE}${MONGO_REPLICASET}
+        database: ${MONGO_DATABASE}
+      tracking:
+        uri: ${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_URI}/${MONGO_DATABASE}${MONGO_REPLICASET}
+        database: ${MONGO_DATABASE}
+  # All properties avaliable at https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html (find by "spring.kafka"):
+  kafka:
+    producer:
+      client-id: cdc-ms-analise-proposta-online
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+      retries: ${KAFKA_PRODUCER_RETRIES}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all #0, 1 ou all
+#    ssl:
+#       trust-store-location: ${KAFKA_TRUSTSTORE}
+#       trust-store-password: ${KAFKA_TRUSTSTORE_PASSWORD}
+#    properties:
+#      security:
+#        protocol: SASL_SSL
+#      sasl:
+#        mechanism: SCRAM-SHA-256
+#        jaas:
+#          config: org.apache.kafka.common.security.scram.ScramLoginModule required username="${KAFKA_USERNAME}" password="${KAFKA_PASSWORD}";
+    listener:
+      ack-mode: manual
+
+analise-proposta-online:
+  api:
+    save-max-retries: ${API_SAVE_MAX_RETRIES}
+    # Tempo máximo de vida do cache, especificado em segundos
+    max-cache-liveness: ${API_MAX_CACHE_LIVENESS}
+    # Tamanho máximo do cache, especificado em unidades
+    max-cache-size: ${API_MAX_CACHE_SIZE}
+  kafka:
+    producer:
+      topic: ${KAFKA_PRODUCER_TOPIC_COMMAND_ANALISAR_PROPOSTA}
+  services:
+    consulta-filial-online: ${SERVICES_CONSULTA_FILIAL_ONLINE}
+    consulta-codigo: ${SERVICES_CONSULTA_CODIGO}
+    analise-proposta-online-cdclab: ${SERVICES_ANALISE_PROPOSTA_ONLINE_CDCLAB}

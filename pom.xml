@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.6.7</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>br.com.via</groupId>
+	<artifactId>cdc-ms-analise-proposta-offline</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>cdc-ms-analise-proposta-offline</name>
+
+	<properties>
+		<java.version>17</java.version>
+		<spring-cloud.version>2021.0.2</spring-cloud.version>
+		<springdoc-openapi.version>1.6.8</springdoc-openapi.version>
+		<!-- Custom dependencies version properties -->
+		<cdc-data.version>0.0.1-SNAPSHOT</cdc-data.version>
+		<cdc-kafka.version>1.7.0-3</cdc-kafka.version>
+		<cdclab-model.version>2.0.0-6</cdclab-model.version>
+		<cdclab-common.version>2.0.0-8</cdclab-common.version>
+
+		<!-- Via Nexus properties -->
+		<nexus.host>http://nexus.viavarejo.com.br</nexus.host>
+		<nexus.libsPublicLocalUrl>${nexus.host}/repository/public/</nexus.libsPublicLocalUrl>
+		<nexus.libsReleasesLocalUrl>${nexus.host}/repository/releases/</nexus.libsReleasesLocalUrl>
+		<nexus.libsSnapshotsLocalUrl>${nexus.host}/repository/snapshots/</nexus.libsSnapshotsLocalUrl>
+	</properties>
+
+	<dependencies>
+		<!-- Spring Framework dependencies -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor.kafka</groupId>
+			<artifactId>reactor-kafka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+
+		<!-- SpringDoc OpenAPI dependencies -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-webflux-ui</artifactId>
+			<version>${springdoc-openapi.version}</version>
+		</dependency>
+
+		<!-- Other dependencies -->
+		<dependency>
+			<groupId>br.com.via.cdc</groupId>
+			<artifactId>cdc-data</artifactId>
+			<version>${cdc-data.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>br.com.viavarejo.cp</groupId>
+			<artifactId>cdclab-model</artifactId>
+			<version>${cdclab-model.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>br.com.viavarejo</groupId>
+			<artifactId>cdc-common</artifactId>
+			<version>${cdclab-common.version}</version>
+		</dependency>
+
+		<!-- Test scope dependencies -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<repositories>
+		<repository>
+			<id>ViaVarejo</id>
+			<url>${nexus.libsPublicLocalUrl}</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>ViaVarejo</id>
+			<url>${nexus.libsPublicLocalUrl}</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>ViaVarejo-snapshots</id>
+			<url>${nexus.libsPublicLocalUrl}</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<name>Internal Releases</name>
+			<url>${nexus.libsReleasesLocalUrl}</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>Internal Snapshot</name>
+			<url>${nexus.libsSnapshotsLocalUrl}</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>build-info</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
