@@ -11,7 +11,6 @@ import javax.validation.Validator;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -197,7 +196,18 @@ public class AnalisePropostaServiceImpl implements AnalisePropostaService {
 
 	private AnalisarPropostaCommand buildCommandToKafka(AnaliseProposta<DocumentoVenda> analiseProposta) {
 		final AnalisarPropostaCommand command = new AnalisarPropostaCommand();
-		BeanUtils.copyProperties(analiseProposta, command);
+		final Integer codigo = analiseProposta.getCdCttppo();
+		final Integer digito = analiseProposta.getCdCttppoDvr();
+		final Integer empresa = analiseProposta.getCdEmpgcbCttPpo();
+		final Integer filial = analiseProposta.getCdFilCttPpo();
+		final Integer idf = analiseProposta.getCdCclogIdf();
+
+		command.setCodigo(codigo);
+		command.setDigito(digito);
+		command.setEmpresa(empresa);
+		command.setFilial(filial);
+		command.setIdf(idf);
+
 		return command;
 	}
 

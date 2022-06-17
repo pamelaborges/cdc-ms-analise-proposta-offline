@@ -13,13 +13,10 @@ public class SitePropertiesSource {
 	private SitePropertiesService sitePropertiesService;
 
 	public Mono<Boolean> isMicrosservicosKafkaHabilitado() {
-		return Mono.just(true);
-//		return this.sitePropertiesService.findUnique().flatMap(siteProperties -> Mono.just(siteProperties.isMicrosservicosKafkaHabilitado()));
+		return this.sitePropertiesService.findUnique().flatMap(siteProperties -> Mono.just(siteProperties.isMicrosservicosKafkaHabilitado()));
 	}
 
 	public Mono<Boolean> isMsAnalisePropostaOfflineKafkaHabilitado() {
-		return Mono.just(true);
-
-//		return this.sitePropertiesService.findUnique().flatMap(siteProperties -> Mono.just(siteProperties.isMsAnalisePropostaOfflineKafkaHabilitado()));
+		return this.sitePropertiesService.findUnique().flatMap(siteProperties -> Mono.just(siteProperties.isMsAnalisePropostaOfflineKafkaHabilitado()));
 	}
 }
